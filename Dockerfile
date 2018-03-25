@@ -28,8 +28,6 @@ RUN apk add git
 RUN apk add python py2-pip
 RUN pip install wheel
 RUN pip install supervisor supervisor-stdout
-ADD ./supervisord.conf /etc/supervisord.conf
-ADD ./supervisord-dev.conf /etc/supervisord-dev.conf
 
 # Avoid ERROR: invoke-rc.d: policy-rc.d denied execution of start.
 RUN echo "#!/bin/sh\nexit 0" > /usr/sbin/policy-rc.d
@@ -108,22 +106,14 @@ RUN apk add --no-cache --virtual .build-deps-yarn curl gnupg tar \
   && rm yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz \
   && apk del .build-deps-yarn
 
-# Add Node.js app
-COPY app /app
-
-# Install app packages
-WORKDIR /app
-
-RUN yarn
-
-# Build app packages
-RUN yarn build
-
 # Install Bash Shell
 RUN apk add --update bash
 
 # Clean up
 RUN rm -rf /var/cache/apk/*
+
+ADD ./supervisord.conf /etc/supervisord.conf
+ADD ./supervisord-dev.conf /etc/supervisord-dev.conf
 
 # Add a startup script
 ADD ./start.sh /start.sh
@@ -133,6 +123,6 @@ RUN chmod 755 /start.sh
 EXPOSE 8080
 
 # Run the startup script
-WORKDIR /
+# WORKDIR /
 
-CMD ["/start.sh"]
+# CMD ["/start.sh"]
