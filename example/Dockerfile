@@ -1,4 +1,4 @@
-from asia.gcr.io/fapp-c37ca/nginx-node-docker:latest
+from ranatchai/nginx-node-docker
 
 # Add Node.js app
 RUN mkdir /app
